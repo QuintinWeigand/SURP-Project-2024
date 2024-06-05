@@ -1,75 +1,61 @@
+#Importing libraries
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy.integrate as scpy
 
+#Declares global variables that do not change
 global Radius 
-Radius = 1.0e14
+Radius = 1.0e8 #in cm
+global speed_of_light
+speed_of_light = 3.0e10 #in cm/s
 
-#I believe function1 is correct, this is assuming that t_naught is correct
+#This function is used to help generate a list for the first integral to then be integrated by simpson
 def function_1(t_dummy, ejecta_mass, ejecta_velocity):
-    #print("Function1!")
+    
+    #Calculates t_d
+    t_d = np.sqrt(( 2 *.33 * ejecta_mass) / (13.8 * speed_of_light * ejecta_velocity) )
 
-    #Converts t_dummy from days to seconds
-    #t_dummy = t_dummy * 86400
-    #print("t_dummy is:", t_dummy)
-    #print("ejecta mass is:", ejecta_mass)
+    #Calculates t_naught
+    t_naught = (0.33 * ejecta_mass) / (13.8 * speed_of_light * Radius)
 
-    #Make sure ejecta mass is converted when inputted into function
-    t_d = np.sqrt(( 2 *.33 * ejecta_mass) / (13.8 * 3.0e10 * ejecta_velocity) )
-
-    t_naught = (0.33 * ejecta_mass) / (13.8 * 3.0e10 * Radius) #This is assuming t_naught is correct
-    #print("Test1:", 0.33 * ejecta_mass)
-    #print("Test2:", 13.8 * 3.0e10 * 1.0e12)
-    #print("t_naught is:", t_naught)
-
-    #Note 8.8 days was turned into 760320 seconds
-    #instance = ((1/t_naught) * (np.exp(t_dummy/t_naught)) * (np.exp(-t_dummy/760320)))
-
-    #instance = ((Radius / (ejecta_velocity * t_d)) + (t_dummy / t_d)) * np.exp((t_dummy**2/t_d**2) + (2 * Radius * t_dummy / ejecta_velocity * t_d**2)) * (np.exp(-t_dummy/760320))
+    #Calculates each part of the function (which I split into 3 parts)
     part1 = ((Radius / (ejecta_velocity * t_d)) + (t_dummy / t_d))
 
     part2 = np.exp((t_dummy**2/t_d**2) + ((2 * Radius * t_dummy) / (ejecta_velocity * t_d**2)))
 
     part3 = (np.exp(-t_dummy/760320))
 
+    #Computes the final value
     instance = part1 * part2 * part3
-    #print("instance is:", instance)
 
+    #Returns the value to the calling environment
     return instance
 
-#I belive function2 is correct, this is also assuming that t_naught is correct
+#This function is used to help generate a list for the second integral to then be integrated by simpson
 def function_2(t_dummy, ejecta_mass, ejecta_velocity):
-    #print("Function2!")
 
-    #Converts t_dummy from days to seconds
-    #t_dummy = t_dummy * 86400
-    #print("t_dummy is:", t_dummy)
-    #print("ejecta mass is:", ejecta_mass)
+    #Calculates t_d
+    t_d = np.sqrt(( 2 * .33 * ejecta_mass) / (13.8 * speed_of_light * ejecta_velocity))
 
-    #Make sure ejecta mass is converted when inputted into function
-    t_d = np.sqrt(( 2 * .33 * ejecta_mass) / (13.8 * 3.0e10 * ejecta_velocity))
+    #Calculates t_naught
+    t_naught = (0.33 * ejecta_mass) / (13.8 * speed_of_light * Radius)
 
-    t_naught = (0.33 * ejecta_mass) / (13.8 * 3.0e10 * Radius)
-    #print("Test1:", 0.33 * ejecta_mass)
-    #print("Test2:", 13.8 * 3.0e10 * 1.0e12)
-    #print("t_naught is:", t_naught)
-
-    #Note 111.3 days was turned into 9616320 seconds
-    #instance = ((1/t_naught) * (np.exp(-t_dummy/t_naught)) * (np.exp(t_dummy/9616320)))
+    #Calculates each part of the function (which I split into 3 parts)
     part1 = ( (Radius / (ejecta_velocity * t_d) ) + (t_dummy / t_d) )
     
     part2 = np.exp( (t_dummy**2/t_d**2) + ( (2 * Radius * t_dummy) / (ejecta_velocity * t_d**2) ) )
 
     part3 = np.exp( -t_dummy / 9616320 )
 
-    instance = part1 * part2 * part3
-    #print("instance is:", instance)    
+    #Computes the final value
+    instance = part1 * part2 * part3   
 
+    #Returns the value to the calling environment
     return instance
 
-#I believe this simpson function works
+#Function for Simpson method of integrations
 def simpson(ts_ex1, vs_ex1):
     
+    #Calculates the area with the data points from the lists sent
     area_Simp = vs_ex1[0]
 
     for i in range(1,len(ts_ex1)-1):
@@ -81,41 +67,45 @@ def simpson(ts_ex1, vs_ex1):
         
     area_Simp *= (ts_ex1[1] - ts_ex1[0]) / 3.0
 
-    #print(area_Simp)
-
+    #Returns the final area (the integral) to the calling environment
     return area_Simp
 
+#This function creates a list using function_1 and function_2 which calculates the integral of each and then
+#computes the final luminosty at a set point
 def return_luminosity(t, mass_of_ejecta, Ni_mass, ejecta_velocity):
     
+    #Converts t to seconds for the final time
     t = t * 86400
 
     #Becuase t is now in terms of seconds we do not need to convert in the functions
     #above
     t_prime = np.linspace(0, t, 1000)
 
+    #Creates a list for each of the inegrats to be integrated by simpson
     list1 = np.array([function_1(t_dummy, mass_of_ejecta, ejecta_velocity) for t_dummy in t_prime])
     list2 = np.array([function_2(t_dummy, mass_of_ejecta, ejecta_velocity) for t_dummy in t_prime])
 
+    #Calculates each integral using simpson
     integral_1 = simpson(t_prime, list1)
-    #print("Integral 1 =", integral_1)
     integral_2 = simpson(t_prime, list2)
-    #print("Integral 2 =", integral_2)
 
-    t_d = np.sqrt( ( 2 *.33 * ejecta_mass) / (13.8 * 3.0e10 * ejecta_velocity) )
+    #Calculates t_d
+    t_d = np.sqrt( ( 2 *.33 * ejecta_mass) / (13.8 * speed_of_light * ejecta_velocity) )
 
-    t_naught = (0.33 * mass_of_ejecta) / (13.8 * 3.0e10 * Radius)
-    #print("t_naught =", t_naught)
+    #Calculates t_naught
+    t_naught = (0.33 * mass_of_ejecta) / (13.8 * speed_of_light * Radius)
     
+    #Calculates each part of the total function (which I split into 3 parts)
     part1 = (2*Ni_mass/t_d * np.exp(-(t**2/t_d**2) + (2 * Radius * t) / (ejecta_velocity * t_d**2)))
-    #print("Part 1 =", part1)
+
     part2 = (((3.9e10 - 6.8e9) * integral_1) + (6.8e9 * integral_2))
-    #print("Part 2 =", part2)
+
     part3 = (1 - np.exp(-((3 * .33 * mass_of_ejecta) / (4 * np.pi * (ejecta_velocity**2) * (t**2)))))
-    #print("Part 3 =", part3)
-    #luminosity = (Ni_mass/t_naught * np.exp(-t/t_naught)) * ((3.9e10 - 6.8e9) * integral_1 + 6.8e9 * integral_2) * (1 - np.ext(-((3 * .33 * mass_of_ejecta) / (4 * np.pi * ejecta_velocity**2 * t**2))))
     
+    #Calculates the final luminosity using the 3 parts
     luminosity = part1 * part2 * part3
 
+    #Return luminosity to the calling environment
     return luminosity
 
 
@@ -126,7 +116,7 @@ ejecta_mass = float(input("Please enter an ejecta mass (in solar mass): "))
 ejecta_mass = ejecta_mass * 1.989e33
 #print("Ejecta mass is:", ejecta_mass)
 
-mass_Ni = float(input("Please enter a Ni mass (fraction of): "))
+mass_Ni = float(input("Please enter a Ni mass (fraction of ejecta mass): "))
 mass_Ni = mass_Ni * ejecta_mass
 #print("Ni Mass is:", mass_Ni)
 
@@ -143,7 +133,22 @@ ejecta_velocity = ejecta_velocity * 100000
 x_list = np.linspace(1,200,398)
 y_list = np.array([return_luminosity(t, ejecta_mass, mass_Ni, ejecta_velocity) for t in x_list])
 
+#Prints the y values
 print(y_list)
 
+#Creates the plot
+fig, ax = plt.subplots()
+ax.plot(x_list, y_list,
+        linestyle = '-',
+        color = 'black',
+        linewidth = 2)
+
+#Sets the title and x & y labels
+ax.set_title('Luminosity ( L(t) ) vs. Time (Days)')
+ax.set_xlabel('Time (Days)')
+ax.set_ylabel('Luminosity ( L(t) )')
+
+#Displays the plot
+plt.show()
 
 
