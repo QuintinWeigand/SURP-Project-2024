@@ -110,19 +110,22 @@ def return_luminosity(t, mass_of_ejecta, Ni_mass, ejecta_velocity):
 
 
 
-#Taking inputs for model and converting to CGS!
+#Taking inputs for model
 
 ejecta_mass = float(input("Please enter an ejecta mass (in solar mass): "))
-ejecta_mass = ejecta_mass * 1.989e33
-#print("Ejecta mass is:", ejecta_mass)
 
 mass_Ni = float(input("Please enter a Ni mass (fraction of ejecta mass): "))
-mass_Ni = mass_Ni * ejecta_mass
-#print("Ni Mass is:", mass_Ni)
 
 ejecta_velocity = int(input("Please enter a ejecta velocity (in km/s): "))
+
+
+#Creates a data file based on variable entry
+filename = "LC_" + str(ejecta_mass) + "_" + str(mass_Ni) + "_" + str(ejecta_velocity) + ".data"
+
+#Converting the data to CGS
+ejecta_mass = ejecta_mass * 1.989e33
+mass_Ni = mass_Ni * ejecta_mass
 ejecta_velocity = ejecta_velocity * 100000
-#print("Ejecta Velocity is:", ejecta_velocity)
 
 
 #Testing individual luminosity values
@@ -134,21 +137,31 @@ x_list = np.linspace(1,200,398)
 y_list = np.array([return_luminosity(t, ejecta_mass, mass_Ni, ejecta_velocity) for t in x_list])
 
 #Prints the y values
-print(y_list)
+#print(y_list)
+
+
+
+#Opens the file in write mode
+file = open(filename, "w")
+
+#Writes the data to the file
+for i, (x, y) in enumerate(zip(x_list, y_list)):
+    file.write(str("{:3.1f}".format(x)) + "    " + str("{:.5e}".format(y)) + '\n')
+
+
 
 #Creates the plot
-fig, ax = plt.subplots()
-ax.plot(x_list, y_list,
-        linestyle = '-',
-        color = 'black',
-        linewidth = 2)
+#fig, ax = plt.subplots()
+#ax.plot(x_list, y_list,
+#        linestyle = '-',
+#        color = 'black',
+#        linewidth = 2)
 
 #Sets the title and x & y labels
-ax.set_title('Luminosity ( L(t) ) vs. Time (Days)')
-ax.set_xlabel('Time (Days)')
-ax.set_ylabel('Luminosity ( L(t) )')
+#ax.set_title('Luminosity ( L(t) ) vs. Time (Days)')
+#ax.set_xlabel('Time (Days)')
+#ax.set_ylabel('Luminosity ( L(t) )')
 
 #Displays the plot
-plt.show()
-
+#plt.show()
 
