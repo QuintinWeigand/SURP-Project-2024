@@ -7,9 +7,9 @@ The file name is based on the follwing respectivly:
 
 
 An example of this is:  "LC_0.8_0.1_1000.data"
-  Where 0.8 is the ejecta mass (in solar mass),
-  0.1 is the decimal of the ejecta mass to represent Nickel Mass (10%),
-  and 1000 is the ejecta velocity (in km/s)
+  - Where 0.8 is the ejecta mass (in solar mass),
+    0.1 is the decimal of the ejecta mass to represent Nickel Mass (10%),
+    and 1000 is the ejecta velocity (in km/s) 
 
 
 Within the file, it contains numerous lines of two values,
