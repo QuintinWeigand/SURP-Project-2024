@@ -1,0 +1,3 @@
+Data_Generator.py Generates the data to be used at a later time (an automated version of Task1Week2.py)
+
+Task1Week2.py is the original program to generate a data file for the input
