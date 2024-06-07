@@ -162,6 +162,8 @@ while(leave == False):
     print("Ejecta_velocity =", ejecta_velocity)
 
     ejecta_velocity += 1000
+
+    file.close()
     
     #The last points we want for the data range (ejecta_velocity is the iterator so once its above we know were done)
     if (ejecta_mass == 1.4 and mass_Ni == 0.9 and ejecta_velocity > 20000):
