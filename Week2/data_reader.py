@@ -36,6 +36,10 @@ else:
 #Creates the x and y list
 x_list, y_list = read_data_from_file(filename)
 
+#Converts the list to a numpy array
+x_list = np.array(x_list)
+y_list = np.array(y_list)
+
 #Creates the plot
 fig, ax = plt.subplots()
 ax.plot(x_list, y_list,
