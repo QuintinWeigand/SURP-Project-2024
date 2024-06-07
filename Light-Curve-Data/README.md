@@ -17,5 +17,14 @@ Within the file, it contains numerous lines of two values,
   2. The y-coordinate which represents luminosity
 
 
-Important note: 
+Important note(s): 
   - All of these data points are derived from a radius of 1.0e8 in centimeters, The radius is not a changing factor between these results
+
+  - There is only one file of the data within the current directory, depending on the scale the user desires it can get up to thousands of iterations.
+    I am not posting all of the data generated here to prevent restrictions to the repo. \
+    The data file within the current directory stands as an EXAMPLE.
+
+  
+
+
+
