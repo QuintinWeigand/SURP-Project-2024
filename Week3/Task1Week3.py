@@ -6,7 +6,7 @@ Radius = 1.0e8 #in cm
 global speed_of_light
 speed_of_light = 3.0e10 #in cm/s
 
-# !!! Note this is NOT WORKING !!!
+#Note: Note verified
 
 def function_1(z_dummy, B_14, P_10, ejecta_mass, ejecta_velocity):
     
@@ -22,7 +22,10 @@ def function_1(z_dummy, B_14, P_10, ejecta_mass, ejecta_velocity):
     y = t_d / t_p
 
     #Math for function_1
-
+    #print("z_dummy is:", z_dummy)
+    part1 = np.exp(z_dummy)
+    #print("part1 is:", part1)
+    
     part1 = np.exp(z_dummy**2 + ((Radius * z_dummy) / (ejecta_velocity * t_d)))
 
     part2 = ( ((Radius) / (ejecta_velocity * t_d)) + z_dummy )
@@ -54,8 +57,14 @@ def return_magnetar_luminosity(t, B_14, P_10, ejecta_mass, ejecta_velocity):
     #Converts days to seconds
     t = t * 86400
 
+    #Calcualting t_d
+    t_d = np.sqrt(( 2 *.33 * ejecta_mass) / (13.8 * speed_of_light * ejecta_velocity) )
+    
+    #Calculating x for the integral upper bound
+    x = t / t_d
+   
     #Do not need to convert time anymore since it is done above in this function
-    x_prime = np.linspace(0, t, 1000)
+    x_prime = np.linspace(0, x, 1000)
 
     #Generates a list of data for function_1 to then be sent to simpson
     list1 = np.array([function_1(z_dummy, B_14, P_10, ejecta_mass, ejecta_velocity) for z_dummy in x_prime])
@@ -64,8 +73,6 @@ def return_magnetar_luminosity(t, B_14, P_10, ejecta_mass, ejecta_velocity):
     integral_1 = simpson(x_prime, list1)
 
     #Calculating important variables for the rest of the function
-    t_d = np.sqrt(( 2 *.33 * ejecta_mass) / (13.8 * speed_of_light * ejecta_velocity) )
-
     t_p = 1.3 * B_14**-2 * P_10**2 #this is in years
     t_p = t_p * 31536000 #converting years to seconds
 
@@ -80,10 +87,10 @@ def return_magnetar_luminosity(t, B_14, P_10, ejecta_mass, ejecta_velocity):
     return luminosity
 
 
-B = float(input("Please enter B_14: "))
-B_14 = B * 1.0e14
+B = float(input("Please enter B: "))
+B_14 = B * 1.0e14 #I believe multiplication is correct (check with him)
 
-P = int(input("Please enter P: "))
+P = int(input("Please enter P (in ms): "))
 P_10 = P / 10
 
 ejecta_velocity = int(input("Please enter a ejecta velocity (in km/s): "))
@@ -108,4 +115,4 @@ ax.set_xlabel('Time (Days)')
 ax.set_ylabel('Luminosity ( L(t) )')
 
 #Displays the plot
-#plt.show()
+plt.show()
