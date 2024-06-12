@@ -6,7 +6,7 @@ Radius = 1.0e8 #in cm
 global speed_of_light
 speed_of_light = 3.0e10 #in cm/s
 
-#Note: Note verified
+#Note: Not verified
 
 def function_1(z_dummy, B_14, P_10, ejecta_mass, ejecta_velocity):
     
