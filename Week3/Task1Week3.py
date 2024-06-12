@@ -2,11 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 global Radius
-Radius = 1.0e8 #in cm
+Radius = 1.0e10 #in cm
 global speed_of_light
 speed_of_light = 3.0e10 #in cm/s
-
-#Note: Not verified
 
 def function_1(z_dummy, B_14, P_10, ejecta_mass, ejecta_velocity):
     
@@ -22,10 +20,9 @@ def function_1(z_dummy, B_14, P_10, ejecta_mass, ejecta_velocity):
     y = t_d / t_p
 
     #Math for function_1
-    #print("z_dummy is:", z_dummy)
-    part1 = np.exp(z_dummy)
-    #print("part1 is:", part1)
     
+    #print("z_dummy is:", z_dummy)
+    #print("part1 is:", part1)
     part1 = np.exp(z_dummy**2 + ((Radius * z_dummy) / (ejecta_velocity * t_d)))
 
     part2 = ( ((Radius) / (ejecta_velocity * t_d)) + z_dummy )
@@ -59,6 +56,7 @@ def return_magnetar_luminosity(t, B_14, P_10, ejecta_mass, ejecta_velocity):
 
     #Calcualting t_d
     t_d = np.sqrt(( 2 *.33 * ejecta_mass) / (13.8 * speed_of_light * ejecta_velocity) )
+    #print("t_d is:", t_d)
     
     #Calculating x for the integral upper bound
     x = t / t_d
@@ -75,8 +73,10 @@ def return_magnetar_luminosity(t, B_14, P_10, ejecta_mass, ejecta_velocity):
     #Calculating important variables for the rest of the function
     t_p = 1.3 * B_14**-2 * P_10**2 #this is in years
     t_p = t_p * 31536000 #converting years to seconds
+    #print("t_p is:", t_p)
 
-    E_p = 2e50 / P_10**2
+    E_p = 2e50 / ( P_10**2 )
+    #print("E_p is:", E_p)
 
     part1 = ((2 * E_p) / t_p) * np.exp( -( (t**2 / t_d**2) + ( (Radius * t) / (ejecta_velocity * t_d**2) ) ) )
 
@@ -87,10 +87,9 @@ def return_magnetar_luminosity(t, B_14, P_10, ejecta_mass, ejecta_velocity):
     return luminosity
 
 
-B = float(input("Please enter B: "))
-B_14 = B * 1.0e14 #I believe multiplication is correct (check with him)
+B_14 = float(input("Please enter B (in 1e14G): "))
 
-P = int(input("Please enter P (in ms): "))
+P = float(input("Please enter P (in ms): "))
 P_10 = P / 10
 
 ejecta_velocity = int(input("Please enter a ejecta velocity (in km/s): "))
@@ -101,6 +100,8 @@ ejecta_mass = ejecta_mass * 1.989e33
 
 x_list = np.linspace(1,200, 398)
 y_list = np.array([return_magnetar_luminosity(t, B_14, P_10, ejecta_mass, ejecta_velocity) for t in x_list])
+
+print(y_list)
 
 #Creates the plot
 fig, ax = plt.subplots()
@@ -115,4 +116,4 @@ ax.set_xlabel('Time (Days)')
 ax.set_ylabel('Luminosity ( L(t) )')
 
 #Displays the plot
-plt.show()
+#plt.show()
