@@ -26,7 +26,7 @@ ejecta_velocity = float(input("Please enter a ejecta velocity (in km/s): "))
 ejecta_mass = float(input("Please enter an ejecta mass (in solar mass): "))
 
 #Creates a file name to compare to existing files
-filename = "M_LC_" + str("{:.2f}".format(B_14)) + "_" + str("{:.1f}".format(P)) + "_" + str(ejecta_velocity) + "_" + str(ejecta_mass) + ".data"
+filename = "M_LC_" + str("{:.2f}".format(B_14)) + "_" + str("{:.1f}".format(P)) + "_" + str("{:.1f}".format(ejecta_velocity)) + "_" + str("{:.1f}".format(ejecta_mass)) + ".data"
 
 #Trys to open the file if it cannot be done terminate the program
 try:
