@@ -65,6 +65,17 @@ def MAD(y_list, median):
     
     return np.median(temp_list)
 
+def deltaL15(x_list, y_list, maximum):
+    
+    x_point_max = y_list.index(maximum)
+
+    if ( x_point_max + 30 > (len(y_list) - 1) ):
+        L_15 = y_list[-1]
+    else:
+        L_15 = y_list[x_point_max + 30]
+
+    return (np.log(L_15 / maximum))
+
 #Temporary will use os.listdict() for handeling the filenames and iterate through
 #filename = "LC_0.8_5_1000.0.data"
 
@@ -75,7 +86,7 @@ filelist.remove("M_data_gen.py")
 filelist.remove("data_reader.py")
 
 
-file = open("data_sheet.data", "w")
+file = open("M_data_sheet.data", "w")
 
 for i in range(len(filelist)):
 
@@ -126,8 +137,12 @@ for i in range(len(filelist)):
     #print("Median Absolute Deviation =", MAD(y_list, median))
 
     file.write(str(B) + " " + str(P) + " " + str(V) + " " + str(M) + " ")
-    file.write(str(maximum) + " " + str(coef_of_variation(standard_deviation, mean)) + " " + str(skew(y_list, mean, standard_deviation)) + " ")
-    file.write(str(kurtosis(y_list, mean)) + " " + str(MAD(y_list, median)) + "\n")
+    #file.write(str(maximum) + " " + str(coef_of_variation(standard_deviation, mean)) + " " + str(skew(y_list, mean, standard_deviation)) + " ")
+    #file.write(str(kurtosis(y_list, mean)) + " " + str(MAD(y_list, median)) + "\n")
+
+    file.write(str("{:.5e}".format(maximum)) + " " + str("{:.5f}".format(coef_of_variation(standard_deviation, mean))) + " ")
+    file.write(str("{:.5f}".format(skew(y_list, mean, standard_deviation))) + " " + str("{:.5f}".format(kurtosis(y_list, mean))) + " ")
+    file.write(str("{:.5e}".format(MAD(y_list, median))) + " " + str("{:.5f}".format(deltaL15(x_list, y_list, maximum))) + "\n")
 
 
 file.close()
