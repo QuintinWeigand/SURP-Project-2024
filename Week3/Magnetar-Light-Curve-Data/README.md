@@ -1,8 +1,8 @@
 The file name is based on the follwing respectivly:
 
 - The thing it is representing. (in this case magnetar light curves (M_LC))
-- P (Period)
 - B
+- P (Period
 - Ejecta Velocity (in km/s)
 - Ejecta Mass (in solar mass)
 - The file type (.data in this case)
@@ -10,7 +10,7 @@ The file name is based on the follwing respectivly:
 
 An example a data file is: "M_LC_0.10_1.0_1000.0_2.0.data"
  
-- Where 0.10 is the period, 1.0 is the B, 1000 is the ejecta velocity (in km/s), and 2.0 is the Ejecta Mass (in solar mass)
+- Where 1 is the B, 0.10 is the P (Period), 1000 is the ejecta velocity (in km/s), and 2.0 is the Ejecta Mass (in solar mass)
 
 
 Within the file, it contains numerous lines of two values,
