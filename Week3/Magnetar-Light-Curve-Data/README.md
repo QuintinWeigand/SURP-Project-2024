@@ -2,7 +2,7 @@ The file name is based on the follwing respectivly:
 
 - The thing it is representing. (in this case magnetar light curves (M_LC))
 - B
-- P (Period
+- P (Period)
 - Ejecta Velocity (in km/s)
 - Ejecta Mass (in solar mass)
 - The file type (.data in this case)
