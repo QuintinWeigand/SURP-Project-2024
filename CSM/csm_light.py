@@ -88,22 +88,30 @@ def function_1(t_prime):
 
     instance = (
         ( (2 * np.pi) / (N - S)**3 ) * g_n**( (5-S) / (N-S) ) * q**( (N-5) / (N-S) ) * (N-3)**2 * (N-5) * B_F**(5-S) *
-        A**( (5-S) / (N-S) ) * (t_prime + t_i)**( (2*N + 6 * S - N*S - 15) / (N-S) ) * stepFunction(x=0) + 2 * np.pi * ( (A*g_n) / (q) )**( (5-N) / (N-S) ) *
-        B_R**(5-N) * g_n * ( (3-S) / (N-S) )**3 * (t_prime + t_i)**( (2*N + 6 * S - N*S - 15) / (N-S) ) * stepFunction(x=0)
+        A**( (5-S) / (N-S) ) * (t_prime + t_i)**( (2*N + 6 * S - N*S - 15) / (N-S) ) * stepFunction(calculateT_FS_STAR(q=0,m_csm_th=0,g_n=0) - t_prime) + 2 * np.pi * ( (A*g_n) / (q) )**( (5-N) / (N-S) ) *
+        B_R**(5-N) * g_n * ( (3-S) / (N-S) )**3 * (t_prime + t_i)**( (2*N + 6 * S - N*S - 15) / (N-S) ) * stepFunction(calculateT_RS_STAR(v_sn=0,g_n=0,q=0) - t_prime)
     )    
 
 
     return instance;
 
 #This is where the nickel decay integral goes
-def function_2():
+def function_2(t_prime, ejectaMass, r_ph, massNI):
+    m_csm_th = calculateM_CSM_TH(q=0, r_ph=0,r_p=0)
+    t_0_prime = (K * (ejectaMass + m_csm_th)) / (BETA * SPEED_OF_LIGHT * r_ph)
 
-    instance = 0
+    instance = (
+        np.exp( (t_prime) / (t_0_prime) ) * massNI * ( (3.9e10 - 6.8e9) * np.exp((-t_prime) / (8.8 * 86400)) + 6.8e9 * np.exp((-t_prime) / (111.3 * 86400)) )
+
+    )
+
     return instance
 
-def returnCSMLuminosity():
+def returnCSMLuminosity(t, r_ph):
+    m_csm_th = calculateM_CSM_TH(q=0,r_ph=0,r_p=0)
     luminosity = 0
     t_0 = calculateT_0(m_csm_th=0,r_ph=0)
+    t_0_prime = (K * (ejectaMass + m_csm_th)) / (BETA * SPEED_OF_LIGHT * r_ph)
 
     t = t * 86400
 
@@ -116,11 +124,10 @@ def returnCSMLuminosity():
     integral_1 = simpson(x_prime, list_1)
     integral_2 = simpson(x_prime, list_2)
 
-    part_1 = (1 / t_0) * np.exp((-t) / t_0)
-    part_2 = integral_1
-    part_3 = integral_2
+    part_1 = (1 / t_0) * np.exp((-t) / t_0) * integral_1
+    part_2 = ( ( 1/t_0_prime) * np.exp( (-(t) / (t_0_prime) ) ) ) * integral_2
 
-    luminosity = part_1 * part_2 * part_3
+    luminosity = part_1 * part_2
 
     return luminosity
 
@@ -130,10 +137,10 @@ x_list = np.linspace(1,200,398)
 
 #These are temporary representing the inevitable inputs (I am acting as if I had the inputs right now)
 ejectaMass = 0
-ejectaVelocity = 0
-massNI = 0
+v_sn = 0
+massNI = 0  
 massCSM = 0
-radius = 0
+r_p = 0
 radiusCSM = 0
 
 y_list = np.array([returnCSMLuminosity(t, ejectaMass) for t in x_list])
