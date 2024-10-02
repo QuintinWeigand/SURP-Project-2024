@@ -154,22 +154,26 @@ radiusCSM = []
 # Conversions
 for i in range(len(ejectaMass)):
     ejectaMass[i] = ejectaMass[i] * 1.989e33
+    massCSM[i] = massCSM[i] * 1.989e33
+    massNI[i] = massNI[i] * 1.989e33
 for j in range(len(v_sn)):
     v_sn[j] = v_sn[j] * 100000
+
+#Radius values do not need to be converted as they are already in CGM
 
 
 #TODO: SUMMARY WE NEED TO FIGURE OUT WHAT R_PH IS AND ALL THE VARIABLES WILL COME TOGETHER THEN FIGURE OUT WHAT TO SEND TO FUNCTIONS TO CALCULATE
 #NOTE 5 MINUTES OF WORK!!!
 
-for e_mass in len(ejectaMass):
-    for vel_sn in len(v_sn):
+for e_mass in range(len(ejectaMass)):
+    for vel_sn in range(len(v_sn)):
         esn = calcualteESN(v_sn[vel_sn], ejectaMass[e_mass]) #TODO: THIS NEEDS TO BE PASSED INTO THE RETURNCSM FUNCTION
         g_n = calcualteG_N(esn, ejectaMass[e_mass]) #TODO: THIS NEEDS TO BE PSASES INTO RETURNCSM FUNCTION
-        for ni_mass in len(massNI):
-            for csm_mass in len(massCSM):
-                for radius_p in len(r_p):
+        for ni_mass in range(len(massNI)):
+            for csm_mass in range(len(massCSM)):
+                for radius_p in range(len(r_p)):
                     t_initial = calculateT_I(v_sn[vel_sn], r_p[radius_p])
-                    for csm_radius in len(radiusCSM):
+                    for csm_radius in range(len(radiusCSM)):
                         #Calculating these these for the 1 time I want to run it (better than calling it when we need it) 
                         #TODO: WE NEED TO PASS THESE TO THE returnCSMLuminosity FUNCTION STILL 
                         q = calcualteQ(massCSM[csm_mass], radiusCSM[csm_radius], r_p[radius_p])
