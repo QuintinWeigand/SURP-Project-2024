@@ -170,7 +170,7 @@ for l in range(len(massNI)):
 for e_mass in range(len(ejectaMass)):
     for vel_sn in range(len(v_sn)):
         esn = calcualteESN(v_sn[vel_sn], ejectaMass[e_mass]) #TODO: THIS NEEDS TO BE PASSED INTO THE RETURNCSM FUNCTION
-        g_n = calcualteG_N(esn, ejectaMass[e_mass]) #TODO: THIS NEEDS TO BE PSASES INTO RETURNCSM FUNCTION
+        g_n = calcualteG_N(esn, ejectaMass[e_mass]) #TODO: THIS NEEDS TO BE PASSED INTO RETURNCSM FUNCTION
         for ni_mass in range(len(massNI)):
             for csm_mass in range(len(massCSM)):
                 for radius_p in range(len(r_p)):
