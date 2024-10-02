@@ -154,10 +154,12 @@ radiusCSM = []
 # Conversions
 for i in range(len(ejectaMass)):
     ejectaMass[i] = ejectaMass[i] * 1.989e33
-    massCSM[i] = massCSM[i] * 1.989e33
-    massNI[i] = massNI[i] * 1.989e33
 for j in range(len(v_sn)):
     v_sn[j] = v_sn[j] * 100000
+for k in range(len(massCSM)):
+    massCSM[j] = massCSM[j] * 1.989e33
+for l in range(len(massNI)):
+    massNI[l] = massNI[l] * 1.989e33
 
 #Radius values do not need to be converted as they are already in CGM
 
