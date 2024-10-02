@@ -80,11 +80,11 @@ def stepFunction(x):
         returnValue = 1
     return returnValue
 
-def function_1(t_prime):
-    t_0 = calculateT_0(m_csm = 0, r_ph = 0)
-    t_i = calculateT_I(VSN=0, radius_p=0)
-    g_n = calcualteG_N(ESN=0, massOfEjecta=0)
-    q = calcualteQ(m_csm=0,r_csm=0,radius_p=0)
+def function_1(t_prime, t_0, t_i, g_n, q):
+    # t_0 = calculateT_0(m_csm = 0, r_ph = 0)
+    # t_i = calculateT_I(VSN=0, radius_p=0) #NOTE: WE CALCULATED THIS OUTSIDE OF SCOPE (THIS IS TEMPORARY)
+    # g_n = calcualteG_N(ESN=0, massOfEjecta=0) #NOTE ESN WAS CALCULATED OUT OF SCOPE #NOTE G_N WAS CALCULATED OUT OF SCOPE  (TEMP)
+    # q = calcualteQ(m_csm=0,r_csm=0,radius_p=0) #NOTE q WAS CALCULATED OUT OF SCOPE (TEMP)
 
     instance = (
         ( (2 * np.pi) / (N - S)**3 ) * g_n**( (5-S) / (N-S) ) * q**( (N-5) / (N-S) ) * (N-3)**2 * (N-5) * B_F**(5-S) *
@@ -96,9 +96,9 @@ def function_1(t_prime):
     return instance;
 
 #This is where the nickel decay integral goes
-def function_2(t_prime, ejectaMass, r_ph, massNI):
-    m_csm_th = calculateM_CSM_TH(q=0, r_ph=0,r_p=0)
-    t_0_prime = (K * (ejectaMass + m_csm_th)) / (BETA * SPEED_OF_LIGHT * r_ph)
+def function_2(t_prime, ejectaMass, r_ph, massNI, m_csm_th, t_0_prime):
+    #m_csm_th = calculateM_CSM_TH(q=0, r_ph=0,r_p=0) #NOTE: I FORGOT WHAT R_PH IS
+    # t_0_prime = (K * (ejectaMass + m_csm_th)) / (BETA * SPEED_OF_LIGHT * r_ph) #NOTE NEED R_PH TO CALCULATE
 
     instance = (
         np.exp( (t_prime) / (t_0_prime) ) * massNI * ( (3.9e10 - 6.8e9) * np.exp((-t_prime) / (8.8 * 86400)) + 6.8e9 * np.exp((-t_prime) / (111.3 * 86400)) )
@@ -107,19 +107,19 @@ def function_2(t_prime, ejectaMass, r_ph, massNI):
 
     return instance
 
-def returnCSMLuminosity(t, r_ph):
-    m_csm_th = calculateM_CSM_TH(q=0,r_ph=0,r_p=0)
-    luminosity = 0
-    t_0 = calculateT_0(m_csm_th=0,r_ph=0)
-    t_0_prime = (K * (ejectaMass + m_csm_th)) / (BETA * SPEED_OF_LIGHT * r_ph)
+def returnCSMLuminosity(t, ejectaMass, v_sn, massNI, massCSM, r_p, csm_radius, esn, g_n, q, r_ph, m_csm_th, t_0, t_0_prime):
+    # m_csm_th = calculateM_CSM_TH(q, r_ph, r_p) ! This is calculated out of scope ! 
 
-    t = t * 86400
+    # t_0 = calculateT_0(m_csm_th=0,r_ph=0) ! This is calculated out of scope !
+    # t_0_prime = (K * (ejectaMass + m_csm_th)) / (BETA * SPEED_OF_LIGHT * r_ph) ! This is calculated out of scope ! 
+
+    t = t * 86400 #Converting t to CSM so we do not have to worry about conversion beyond this point
 
     x_prime = np.linspace(0, t ,1000)
     #We need a list for each integral (2 total lists)
     #List 1
-    list_1 = np.array([function_1(t_prime)] for t_prime in x_prime)
-    list_2 = np.array([function_2(t_prime) for t_prime in x_prime])
+    list_1 = np.array([function_1(t_prime, t_0, t_0_prime, g_n, q) for t_prime in x_prime])
+    list_2 = np.array([function_2(t_prime, ejectaMass, r_ph, massNI, m_csm_th, t_0_prime) for t_prime in x_prime])
 
     integral_1 = simpson(x_prime, list_1)
     integral_2 = simpson(x_prime, list_2)
@@ -136,14 +136,56 @@ x_list = np.linspace(1,200,398)
 
 
 #These are temporary representing the inevitable inputs (I am acting as if I had the inputs right now)
-ejectaMass = 0
-v_sn = 0
-massNI = 0  
-massCSM = 0
-r_p = 0
-radiusCSM = 0
+# ejectaMass = 0
+# v_sn = 0
+# massNI = 0  
+# massCSM = 0
+# r_p = 0
+# radiusCSM = 0
 
-y_list = np.array([returnCSMLuminosity(t, ejectaMass) for t in x_list])
+#These need to be converted first
+ejectaMass = [] 
+v_sn = []
+massNI = []
+massCSM = []
+r_p = []
+radiusCSM = []
+
+# Conversions
+for i in range(len(ejectaMass)):
+    ejectaMass[i] = ejectaMass[i] * 1.989e33
+for j in range(len(v_sn)):
+    v_sn[j] = v_sn[j] * 100000
+
+
+#TODO: SUMMARY WE NEED TO FIGURE OUT WHAT R_PH IS AND ALL THE VARIABLES WILL COME TOGETHER THEN FIGURE OUT WHAT TO SEND TO FUNCTIONS TO CALCULATE
+#NOTE 5 MINUTES OF WORK!!!
+
+for e_mass in len(ejectaMass):
+    for vel_sn in len(v_sn):
+        esn = calcualteESN(v_sn[vel_sn], ejectaMass[e_mass]) #TODO: THIS NEEDS TO BE PASSED INTO THE RETURNCSM FUNCTION
+        g_n = calcualteG_N(esn, ejectaMass[e_mass]) #TODO: THIS NEEDS TO BE PSASES INTO RETURNCSM FUNCTION
+        for ni_mass in len(massNI):
+            for csm_mass in len(massCSM):
+                for radius_p in len(r_p):
+                    t_initial = calculateT_I(v_sn[vel_sn], r_p[radius_p])
+                    for csm_radius in len(radiusCSM):
+                        #Calculating these these for the 1 time I want to run it (better than calling it when we need it) 
+                        #TODO: WE NEED TO PASS THESE TO THE returnCSMLuminosity FUNCTION STILL 
+                        q = calcualteQ(massCSM[csm_mass], radiusCSM[csm_radius], r_p[radius_p])
+                        r_ph = calculateR_ph(q, radiusCSM[csm_radius])
+                        m_csm_th = calculateM_CSM_TH(q, r_ph, r_p)
+                        t_0 = calculateT_0(m_csm_th, r_ph)
+                        t_0_prime = (K * (ejectaMass[e_mass] + m_csm_th)) / (BETA * SPEED_OF_LIGHT * r_ph) 
+
+
+                        y_list = np.array([returnCSMLuminosity(t, ejectaMass[e_mass], v_sn[vel_sn], massNI[ni_mass], 
+                                                               massCSM[csm_mass], r_p[radius_p], csm_radius[radiusCSM], 
+                                                               esn, g_n, q, r_ph, m_csm_th, t_0, t_0_prime) for t in x_list])
+
+
+
+
 
 
 #NOTE: All I need is to verify what values are being passed in and what 
