@@ -3,20 +3,28 @@ import matplotlib.pyplot as plt
 
 global N
 N = 12 
+
 global B_F
 B_F = 1.226
+
 global B_R
 B_R = 0.987
+
 global A
 A = 0.038
+
 global S
 S = 2
+
 global BETA
 BETA = 13.8
+
 global DELTA
 DELTA = 0
+
 global SPEED_OF_LIGHT
 SPEED_OF_LIGHT = 3.0e10
+
 global K
 K = 0.33
 
@@ -38,7 +46,7 @@ def simpson(ts_ex1, vs_ex1):
     return area_Simp
 
 def calcualteQ(m_csm, r_csm, radius_p):
-    q = (((3-S) * m_csm) / (r_csm**(3-S) - radius_p**(3-S)))
+    q = (((3-S) * m_csm) / (4.0 * np.pi * (r_csm**(3-S) - radius_p**(3-S))))
     return q
 
 def calculateR_ph(q, r_csm):
@@ -65,22 +73,27 @@ def calculateT_I(VSN, radius_p):
     return (radius_p / VSN)
 
 def calcualteG_N(ESN, massOfEjecta):
-    G_N = (1 / (4 * np.pi * (DELTA - N))) * ( ( (2 * (5 - DELTA) * (N-5) * ESN)**((N-3)/2) ) / ((3 - DELTA) * (N-3) * massOfEjecta)**((N-5) / 2))
-    return abs(G_N)
+    G_N = np.abs(1 / (4 * np.pi * (DELTA - N))) * \
+        ( ( (2 * (5 - DELTA) * (N-5) * ESN)**((N-3)/2) ) / 
+         ((3 - DELTA) * (N-3) * massOfEjecta)**((N-5) / 2))
+    return G_N
 
 def calculateT_FS_STAR(q, m_csm_th, g_n):
     funkyPower = ((N-S) / (N-3) * (3-S))
     #print((A * g_n)**((S-3) / (N-S)))
     #print((3-S) * q**((3-N)/(N-S)), (A * g_n)**((S-3) / (N-S)))
     #print((np.abs( ((3-S) * q**((3-N)/(N-S)) * (A * g_n)**((S-3) / (N-S))) / (4 * np.pi * B_F**(3-S))))) #NOTE:THIS RESULTS IN NAN CURRENTLY
-    t_fs_star = (np.abs( ( (3-S) * q**((3-N)/(N-S)) * (A * g_n)**((S-3) / (N-S)) ) / (4 * np.pi * B_F**(3-S))))**(funkyPower) * m_csm_th**(funkyPower)
+    t_fs_star = np.abs(( ( (3-S) * q**((3-N)/(N-S)) * (A * g_n)**((S-3) / (N-S)) ) / 
+                  (4 * np.pi * B_F**(3-S))))**(funkyPower) * m_csm_th**(funkyPower)
     #print('t_fs_star', q, m_csm_th, funkyPower, g_n, t_fs_star)
     return t_fs_star
 
 def calculateT_RS_STAR(v_sn, g_n, q, massOfEjecta):
-    t_rs_star = ( ( ( (v_sn) / ((B_R) * ((A * g_n) / q))**(1/(N-S)) ) * 
-                 (1 - ((3-N) * massOfEjecta) / (4 * np.pi * (v_sn)**(3-N) * g_n)))**(1/(3-N)) )**((N-S) / (S-3))
-    #print('t_rs_star', v_sn, g_n, q, massOfEjecta, t_rs_star)
+    t_rs_star = ( ( (v_sn) / ((B_R) * ((A * g_n) / q))**(1/(N-S)) ) * 
+                 (1 - ((3-N) * massOfEjecta) / 
+                  (4 * np.pi * (v_sn)**(3-N) * g_n))**(1/(3-N)) )**((N-S) / (S-3))
+    #print('t_rs_star', (v_sn), ((B_R) * ((A * g_n) / q))**(1/(N-S)), 
+    #      (v_sn) / ((B_R) * ((A * g_n) / q))**(1/(N-S)))
     return t_rs_star
 
 def stepFunction(x):
@@ -117,31 +130,43 @@ def function_2(t_prime, ejectaMass, r_ph, massNI, m_csm_th, t_0_prime):
     return instance
 
 def returnCSMLuminosity(t, ejectaMass, v_sn, massNI, massCSM, r_p, csm_radius, esn, g_n, q, r_ph, m_csm_th, t_0, t_0_prime):
-    # m_csm_th = calculateM_CSM_TH(q, r_ph, r_p) ! This is calculated out of scope ! 
+    
+    #q = calcualteQ(massCSM, csm_radius, r_p)
+    #r_ph = calculateR_ph(q, csm_radius)
+    #m_csm_th = calculateM_CSM_TH(q, r_ph, r_p) # This is calculated out of scope 
 
-    # t_0 = calculateT_0(m_csm_th=0,r_ph=0) ! This is calculated out of scope !
-    # t_0_prime = (K * (ejectaMass + m_csm_th)) / (BETA * SPEED_OF_LIGHT * r_ph) ! This is calculated out of scope ! 
+    #t_0 = calculateT_0(m_csm_th,r_ph) # This is calculated out of scope 
+    #t_0_prime = (K * (ejectaMass + m_csm_th)) / (BETA * SPEED_OF_LIGHT * r_ph) # This is calculated out of scope ! 
 
     t = t * 86400 #Converting t to CSM so we do not have to worry about conversion beyond this point
 
-    x_prime = np.linspace(0, t ,1000)
+    x_prime = np.linspace(0, t, 100)
     #We need a list for each integral (2 total lists)
     #List 1
-    list_1 = np.array([function_1(t_prime, t_0, t_0_prime, g_n, q, m_csm_th, v_sn, ejectaMass) for t_prime in x_prime])
-    list_2 = np.array([function_2(t_prime, ejectaMass, r_ph, massNI, m_csm_th, t_0_prime) for t_prime in x_prime])
-
+    list_1 = np.array([np.exp(t_prime / t_0) * 
+                       function_1(t_prime, t_0, t_0_prime, g_n, q, 
+                                  m_csm_th, v_sn, ejectaMass) 
+                                  for t_prime in x_prime])
+    list_2 = np.array([np.exp(t_prime / t_0_prime) * 
+                       function_2(t_prime, ejectaMass, r_ph, 
+                                  massNI, m_csm_th, t_0_prime) 
+                                  for t_prime in x_prime])
+    #print(m_csm_th, calculateT_FS_STAR(q, m_csm_th, g_n) / 86400, 
+    #      calculateT_RS_STAR(v_sn, g_n, q, ejectaMass) / 86400)
     integral_1 = simpson(x_prime, list_1)
     integral_2 = simpson(x_prime, list_2)
 
     part_1 = (1 / t_0) * np.exp((-t) / t_0) * integral_1
     part_2 = ( ( 1/t_0_prime) * np.exp( (-(t) / (t_0_prime) ) ) ) * integral_2
 
-    luminosity = part_1 * part_2
+    #print(part_1, part_2)
+    luminosity = part_1 + part_2
 
     return luminosity
 
 
 #x_list = np.linspace(1,200,398)
+#x_list = [20,40] 
 x_list = np.linspace(1,200,398)
 
 #These are temporary representing the inevitable inputs (I am acting as if I had the inputs right now)
@@ -157,8 +182,8 @@ ejectaMass = [12]
 v_sn = [calculateVSN(1e51, (12 * 1.989e33))]
 massNI = [0.08]
 massCSM = [1]
-r_p = [1.0e14]
-radiusCSM = [1.14e15]
+r_p = [1.0e12]
+radiusCSM = [6.59e14]
 
 # Conversions
 for i in range(len(ejectaMass)):
