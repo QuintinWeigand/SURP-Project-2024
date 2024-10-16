@@ -28,6 +28,9 @@ SPEED_OF_LIGHT = 3.0e10
 global K
 K = 0.33
 
+global FUNKYPOWER
+FUNKYPOWER = ((N-S) / (N-3) * (3-S))
+
 def simpson(ts_ex1, vs_ex1):
     
     #Calculates the area with the data points from the lists sent
@@ -79,13 +82,13 @@ def calcualteG_N(ESN, massOfEjecta):
     return G_N
 
 def calculateT_FS_STAR(q, m_csm_th, g_n):
-    funkyPower = ((N-S) / (N-3) * (3-S))
+    FUNKYPOWER = ((N-S) / (N-3) * (3-S))
     #print((A * g_n)**((S-3) / (N-S)))
     #print((3-S) * q**((3-N)/(N-S)), (A * g_n)**((S-3) / (N-S)))
     #print((np.abs( ((3-S) * q**((3-N)/(N-S)) * (A * g_n)**((S-3) / (N-S))) / (4 * np.pi * B_F**(3-S))))) #NOTE:THIS RESULTS IN NAN CURRENTLY
     t_fs_star = np.abs(( ( (3-S) * q**((3-N)/(N-S)) * (A * g_n)**((S-3) / (N-S)) ) / 
-                  (4 * np.pi * B_F**(3-S))))**(funkyPower) * m_csm_th**(funkyPower)
-    #print('t_fs_star', q, m_csm_th, funkyPower, g_n, t_fs_star)
+                  (4 * np.pi * B_F**(3-S))))**(FUNKYPOWER) * m_csm_th**(FUNKYPOWER)
+    #print('t_fs_star', q, m_csm_th, FUNKYPOWER, g_n, t_fs_star)
     return t_fs_star
 
 def calculateT_RS_STAR(v_sn, g_n, q, massOfEjecta):
@@ -102,7 +105,7 @@ def stepFunction(x):
         returnValue = 1
     return returnValue
 
-def function_1(t_prime, t_0, t_i, g_n, q, m_csm_th, v_sn, ejectaMass):
+def function_1(t_prime, t_0, t_i, g_n, q, m_csm_th, v_sn, ejectaMass, t_fs_star, t_rs_star):
     # t_0 = calculateT_0(m_csm = 0, r_ph = 0)
     # t_i = calculateT_I(VSN=0, radius_p=0) #NOTE: WE CALCULATED THIS OUTSIDE OF SCOPE (THIS IS TEMPORARY)
     # g_n = calcualteG_N(ESN=0, massOfEjecta=0) #NOTE ESN WAS CALCULATED OUT OF SCOPE #NOTE G_N WAS CALCULATED OUT OF SCOPE  (TEMP)
@@ -110,8 +113,8 @@ def function_1(t_prime, t_0, t_i, g_n, q, m_csm_th, v_sn, ejectaMass):
 
     instance = (
         ( (2 * np.pi) / (N - S)**3 ) * g_n**( (5-S) / (N-S) ) * q**( (N-5) / (N-S) ) * (N-3)**2 * (N-5) * B_F**(5-S) *
-        A**( (5-S) / (N-S) ) * (t_prime + t_i)**( (2*N + 6 * S - N*S - 15) / (N-S) ) * stepFunction(calculateT_FS_STAR(q, m_csm_th, g_n) - t_prime) + 2 * np.pi * ( (A*g_n) / (q) )**( (5-N) / (N-S) ) *
-        B_R**(5-N) * g_n * ( (3-S) / (N-S) )**3 * (t_prime + t_i)**( (2*N + 6 * S - N*S - 15) / (N-S) ) * stepFunction(calculateT_RS_STAR(v_sn, g_n, q, ejectaMass) - t_prime)
+        A**( (5-S) / (N-S) ) * (t_prime + t_i)**( (2*N + 6 * S - N*S - 15) / (N-S) ) * stepFunction(t_fs_star - t_prime) + 2 * np.pi * ( (A*g_n) / (q) )**( (5-N) / (N-S) ) *
+        B_R**(5-N) * g_n * ( (3-S) / (N-S) )**3 * (t_prime + t_i)**( (2*N + 6 * S - N*S - 15) / (N-S) ) * stepFunction(t_rs_star - t_prime)
     )    
 
 
@@ -129,7 +132,7 @@ def function_2(t_prime, ejectaMass, r_ph, massNI, m_csm_th, t_0_prime):
 
     return instance
 
-def returnCSMLuminosity(t, ejectaMass, v_sn, massNI, massCSM, r_p, csm_radius, esn, g_n, q, r_ph, m_csm_th, t_0, t_0_prime):
+def returnCSMLuminosity(t, ejectaMass, v_sn, massNI, massCSM, r_p, csm_radius, esn, g_n, q, r_ph, m_csm_th, t_0, t_0_prime, t_fs_star, t_rs_star):
     
     #q = calcualteQ(massCSM, csm_radius, r_p)
     #r_ph = calculateR_ph(q, csm_radius)
@@ -145,7 +148,7 @@ def returnCSMLuminosity(t, ejectaMass, v_sn, massNI, massCSM, r_p, csm_radius, e
     #List 1
     list_1 = np.array([np.exp(t_prime / t_0) * 
                        function_1(t_prime, t_0, t_0_prime, g_n, q, 
-                                  m_csm_th, v_sn, ejectaMass) 
+                                  m_csm_th, v_sn, ejectaMass, t_fs_star, t_rs_star) 
                                   for t_prime in x_prime])
     list_2 = np.array([np.exp(t_prime / t_0_prime) * 
                        function_2(t_prime, ejectaMass, r_ph, 
@@ -197,6 +200,9 @@ for l in range(len(massNI)):
 
 #Radius values do not need to be converted as they are already in CGM
 
+# calculateT_FS_STAR(q, m_csm_th, g_n) - t_prime
+# calculateT_RS_STAR(v_sn, g_n, q, ejectaMass)
+
 
 #TODO: SUMMARY WE NEED TO FIGURE OUT WHAT R_PH IS AND ALL THE VARIABLES WILL COME TOGETHER THEN FIGURE OUT WHAT TO SEND TO FUNCTIONS TO CALCULATE
 #NOTE 5 MINUTES OF WORK!!!
@@ -217,12 +223,28 @@ for e_mass in range(len(ejectaMass)):
                         m_csm_th = calculateM_CSM_TH(q, r_ph, r_p[radius_p])
                         t_0 = calculateT_0(m_csm_th, r_ph)
                         t_0_prime = (K * (ejectaMass[e_mass] + m_csm_th)) / (BETA * SPEED_OF_LIGHT * r_ph) 
+                        t_fs_star = calculateT_FS_STAR(q, m_csm_th, g_n)
+                        t_rs_star = calculateT_RS_STAR(v_sn[vel_sn], g_n, q, ejectaMass[e_mass])
 
 
                         y_list = np.array([returnCSMLuminosity(t, ejectaMass[e_mass], v_sn[vel_sn], massNI[ni_mass], 
                                                                massCSM[csm_mass], r_p[radius_p], radiusCSM[csm_radius], 
-                                                               esn, g_n, q, r_ph, m_csm_th, t_0, t_0_prime) for t in x_list])
+                                                               esn, g_n, q, r_ph, m_csm_th, t_0, t_0_prime, t_fs_star, t_rs_star) for t in x_list])
+                        
+                        # We know x_list and y_list should be of the same length
 
+                        filename = "temporaryName.data" # TODO: Dyanimc file naming has to be done
+
+                        file = open(filename, "w") #File is opened
+
+                        for m, (first, second) in enumerate(zip(x_list, y_list)):
+                            file.write(str("{:3.1f}".format(first)) + "    " + str("{:.5e}".format(second)) + '\n')
+
+
+                        file.close() #File is closed
+
+
+                        # TODO: All I want to add now is a output thing to show off what is being done
 
 
 
@@ -244,4 +266,5 @@ ax.set_ylabel('Luminosity ( L(t) )')
 
 #Displays the plot
 plt.show()
+#plt.savefig("temp.png")
 
