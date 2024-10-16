@@ -66,7 +66,12 @@ def return_magnetar_luminosity(t, B_14, P_10, ejecta_mass, ejecta_velocity, t_p,
     return luminosity
 
 #Creating our arrays for data we wish to be entered
+
+# TODO: B_14 is going to be replaced with t_p (NOTE Shing Chi gave parameters in days (convert to seconds))
+# TODO: We have to calculate B_14 values based on our t_p
 B_14 = np.array([0.1, 0.3, 0.5, 0.7, 0.9, 1.0, 3.0, 5.0, 7.0, 9.0, 10.0, 30.0, 50.0, 70.0, 90.0, 100.0])
+
+
 P_10 = np.array([1.0, 3.0, 5.0, 7.0, 9.0, 10.0, 30.0, 50.0, 70.0, 90.0, 100.0])
 ejecta_velocity = np.array([1000.0, 3000.0, 5000.0, 7000.0, 9000.0, 10000.0, 13000.0, 15000.0, 17000.0, 19000.0, 20000.0])
 ejecta_mass = np.array([2.0, 5.0, 10.0])
