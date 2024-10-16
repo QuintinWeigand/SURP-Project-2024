@@ -72,12 +72,15 @@ def return_magnetar_luminosity(t, B_14, P_10, ejecta_mass, ejecta_velocity, t_p,
 # B_14 = np.array([0.1, 0.3, 0.5, 0.7, 0.9, 1.0, 3.0, 5.0, 7.0, 9.0, 10.0, 30.0, 50.0, 70.0, 90.0, 100.0])
 
 t_p = np.array([5.0, 10.0, 30.0, 50.0, 70.0, 100.0]) # NOTE: This is in days
-P_10 = np.array([1.0, 3.0, 5.0, 7.0, 9.0, 10.0, 30.0, 50.0, 70.0, 90.0, 100.0])
-ejecta_velocity = np.array([1000.0, 3000.0, 5000.0, 7000.0, 9000.0, 10000.0, 13000.0, 15000.0, 17000.0, 19000.0, 20000.0])
-ejecta_mass = np.array([2.0, 5.0, 10.0])
+P_10 = np.array([1.0, 3.0, 5.0, 7.0, 9.0, 10.0, 30.0, 50.0, 70.0, 90.0, 100.0]) #in ms
+ejecta_velocity = np.array([1000.0, 3000.0, 5000.0, 7000.0, 9000.0, 10000.0, 13000.0, 15000.0, 17000.0, 19000.0, 20000.0, 23000.0, 25000.0, 27000.0, 29000.0, 30000.0])
+ejecta_mass = np.array([1.0, 3.0, 6.0, 10.0, 15.0])
 
 total_files = len(t_p) * len(P_10) * len(ejecta_velocity) * len(ejecta_mass)
 
+print(total_files)
+
+exit()
 #Converting all the arrays to CGS (to avoid conflict in final iteration)
 for i in range(len(P_10)):
     P_10[i] = P_10[i] / 10

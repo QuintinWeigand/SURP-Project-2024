@@ -180,6 +180,14 @@ for e_mass in range(len(ejectaMass)):
                 for radius_p in range(len(r_p)):
                     t_initial = calculateT_I(v_sn[vel_sn], r_p[radius_p])
                     for csm_radius in range(len(radiusCSM)):
+
+
+                        # I am doing the if statements here to check if the model fits within our constrictor
+                        # I understand it will just loop and do nothing for a while
+                        # if (massNI[ni_mass] > ejectaMass[e_mass] or massCSM[csm_mass] > ejectaMass[e_mass] or radiusCSM[csm_radius] > r_p[radius_p]):
+                        #     print("Hit Branch")
+                        #     break
+
                         
                         q = calcualteQ(massCSM[csm_mass], radiusCSM[csm_radius], r_p[radius_p])
                         r_ph = calculateR_ph(q, radiusCSM[csm_radius])
@@ -196,9 +204,13 @@ for e_mass in range(len(ejectaMass)):
                         
                         # We know x_list and y_list should be of the same length
 
+                        directory = r"/home/quinn/Desktop/Shing-Chi/CSM/CSM_DB/"
+
                         filename = "temporaryName.data" # TODO: Dyanimc file naming has to be done
 
-                        file = open(filename, "w") # File is opened
+                        finalLocation = directory + filename
+
+                        file = open(finalLocation, "w") # File is opened
 
                         for m, (first, second) in enumerate(zip(x_list, y_list)):
                             file.write(str("{:3.1f}".format(first)) + "    " + str("{:.5e}".format(second)) + '\n')
@@ -217,17 +229,17 @@ for e_mass in range(len(ejectaMass)):
 #      to copy from the nickel decay model. It seems like a lot but I believe it really isn't
 
 # This is bogus for not bull I'll just have it commented out.
-fig, ax = plt.subplots()
-ax.plot(x_list, y_list,
-        linestyle = '-',
-        color = 'black',
-        linewidth = 2)
+# fig, ax = plt.subplots()
+# ax.plot(x_list, y_list,
+#         linestyle = '-',
+#         color = 'black',
+#         linewidth = 2)
 
-ax.set_title('Luminosity ( L(t) ) vs. Time (Days)')
-ax.set_xlabel('Time (Days)')
-ax.set_ylabel('Luminosity ( L(t) )')
+# ax.set_title('Luminosity ( L(t) ) vs. Time (Days)')
+# ax.set_xlabel('Time (Days)')
+# ax.set_ylabel('Luminosity ( L(t) )')
 
-#Displays the plot
-plt.show()
+# #Displays the plot
+# plt.show()
 #plt.savefig("temp.png")
 
