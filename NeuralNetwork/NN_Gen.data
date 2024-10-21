@@ -1,0 +1,21 @@
+Ni-Decay Model Index[0] -> 4.62% Percent Error -> 5.52% Standard Deviation
+[Best Params] Activation: relu -> Hidden Layer Sizes: (100, 150, 200) -> Learning Rate: constant -> Solver: adam
+
+Ni-Decay Model Index[1] -> 5.48% Percent Error -> 6.66% Standard Deviation
+[Best Params] Activation: relu -> Hidden Layer Sizes: (100, 150, 200) -> Learning Rate: constant -> Solver: adam
+
+Ni-Decay Model Index[2] -> 9.33% Percent Error -> 21.54% Standard Deviation
+[Best Params] Activation: relu -> Hidden Layer Sizes: (200, 200, 200) -> Learning Rate: constant -> Solver: adam
+
+Magnetar Model Index[0] -> 21.14% Percent Error -> 28.96% Standard Deviation
+[Best Params] Activation: relu -> Hidden Layer Sizes: (100, 100, 100) -> Learning Rate: constant -> Solver: adam
+
+Magnetar Model Index[1] -> 20.19% Percent Error -> 27.85% Standard Deviation
+[Best Params] Activation: relu -> Hidden Layer Sizes: (200, 200, 200) -> Learning Rate: adaptive -> Solver: adam
+
+Magnetar Model Index[2] -> 41.13% Percent Error -> 32.03% Standard Deviation
+[Best Params] Activation: relu -> Hidden Layer Sizes: (100, 150, 200) -> Learning Rate: constant -> Solver: adam
+
+Magnetar Model Index[3] -> 55.56% Percent Error -> 35.44% Standard Deviation
+[Best Params] Activation: relu -> Hidden Layer Sizes: (200, 200, 200) -> Learning Rate: constant -> Solver: adam
+
