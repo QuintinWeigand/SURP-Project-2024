@@ -170,6 +170,8 @@ for k in range(len(massCSM)):
 for l in range(len(massNI)):
     massNI[l] = massNI[l] * 1.989e33
 
+directory = r"/home/quinn/Desktop/Shing-Chi/CSM/CSM_DB/"
+
 
 for e_mass in range(len(ejectaMass)):
     for vel_sn in range(len(v_sn)):
@@ -203,8 +205,6 @@ for e_mass in range(len(ejectaMass)):
                                                                esn, g_n, q, r_ph, m_csm_th, t_0, t_0_prime, t_fs_star, t_rs_star) for t in x_list])
                         
                         # We know x_list and y_list should be of the same length
-
-                        directory = r"/home/quinn/Desktop/Shing-Chi/CSM/CSM_DB/"
 
                         filename = "temporaryName.data" # TODO: Dyanimc file naming has to be done
 

@@ -78,9 +78,6 @@ ejecta_mass = np.array([1.0, 3.0, 6.0, 10.0, 15.0])
 
 total_files = len(t_p) * len(P_10) * len(ejecta_velocity) * len(ejecta_mass)
 
-print(total_files)
-
-exit()
 #Converting all the arrays to CGS (to avoid conflict in final iteration)
 for i in range(len(P_10)):
     P_10[i] = P_10[i] / 10
@@ -96,7 +93,7 @@ x_list = np.linspace(1, 200, 398)
 
 #Creates and initilized our counter that will be useful for observing during runtime
 
-directory = r"/home/quinn/Desktop/Shing-Chi/Week3/MagnetarDB/"
+directory = r"/home/quinn/Desktop/Shing-Chi/Magnetar/MagnetarDB/"
 
 counter = 1
 
@@ -105,7 +102,6 @@ for i in range(len(t_p)):
     for j in range(len(P_10)):
 
         # calculate B14
-        print("t_p: ", t_p[0])
         B_14 = np.sqrt( (.3 * P_10[j]) / t_p[i] )
         t_p_sec = t_p[i] * 3.154e+7
 
