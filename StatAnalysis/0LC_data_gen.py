@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 #list1 = os.listdir()
 #list1.remove("testing.py") #or the filename of the python code
 
+directory = r"/home/quinn/Desktop/Shing-Chi/Ni-Decay/Ni_DecayDB/"
+
 def read_data_from_file(filename):
     x_list = []
     y_list = []
@@ -105,12 +107,12 @@ def deltaL30overL15(x_list, y_list, maximum):
 
 
 
-filelist = os.listdir()
-filelist.remove("0LC_data_gen.py")
-filelist.remove("data_reader.py")
+filelist = os.listdir(r"/home/quinn/Desktop/Shing-Chi/Ni-Decay/Ni_DecayDB/")
+# filelist.remove("0LC_data_gen.py")
+# filelist.remove("data_reader.py")
 
 
-file = open("0LC_updated_data_sheet.data", "w")
+file = open(r"/home/quinn/Desktop/Shing-Chi/StatAnalysis/0LC_updated_data_sheet.data", "w")
 
 for i in range(len(filelist)):
 
@@ -132,7 +134,7 @@ for i in range(len(filelist)):
         ejecta_velocity = filename_elements[3]
 
 
-    x_list, y_list = read_data_from_file(filelist[i])
+    x_list, y_list = read_data_from_file(directory + filelist[i])
 
     #print(y_list)
 
@@ -161,7 +163,7 @@ for i in range(len(filelist)):
     file.write(str("{:.5e}".format(maximum)) + " " + str("{:.5f}".format(coef_of_variation(standard_deviation, mean))) + " ")
     file.write(str("{:.5f}".format(skew(y_list, mean, standard_deviation))) + " " + str("{:.5f}".format(kurtosis(y_list, mean))) + " ")
     file.write(str("{:.5e}".format(MAD(y_list, median))) + " " + str("{:.5f}".format(deltaL15(x_list, y_list, maximum))) + " ")
-    file.write(str("{:.5e}".format(deltanL15overMax(y_list, median))) + " " + str("{:.5e}".format(deltaL30overL15(y_list, median))) + "\n")
+    file.write(str("{:.5e}".format(deltanL15overMax(x_list, y_list, maximum))) + " " + str("{:.5e}".format(deltaL30overL15(x_list, y_list, maximum))) + "\n")
 
 file.close()
 
