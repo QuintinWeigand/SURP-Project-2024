@@ -88,7 +88,7 @@ def deltanL15overMax(x_list, y_list, maximum):
 
     return (np.log(nL_15 / maximum))
 
-def deltaL30overL(x_list, y_list, maximum):
+def deltaL30overL15(x_list, y_list, maximum):
     x_point_max = y_list.index(maximum)
     
     if ( x_point_max + 30 > (len(y_list) - 1) ):
@@ -110,7 +110,7 @@ filelist.remove("0LC_data_gen.py")
 filelist.remove("data_reader.py")
 
 
-file = open("0LC_data_sheet.data", "w")
+file = open("0LC_updated_data_sheet.data", "w")
 
 for i in range(len(filelist)):
 
@@ -160,7 +160,8 @@ for i in range(len(filelist)):
 
     file.write(str("{:.5e}".format(maximum)) + " " + str("{:.5f}".format(coef_of_variation(standard_deviation, mean))) + " ")
     file.write(str("{:.5f}".format(skew(y_list, mean, standard_deviation))) + " " + str("{:.5f}".format(kurtosis(y_list, mean))) + " ")
-    file.write(str("{:.5e}".format(MAD(y_list, median))) + " " + str("{:.5f}".format(deltaL15(x_list, y_list, maximum))) + "\n")
+    file.write(str("{:.5e}".format(MAD(y_list, median))) + " " + str("{:.5f}".format(deltaL15(x_list, y_list, maximum))) + " ")
+    file.write(str("{:.5e}".format(deltanL15overMax(y_list, median))) + " " + str("{:.5e}".format(deltaL30overL15(y_list, median))) + "\n")
 
 file.close()
 

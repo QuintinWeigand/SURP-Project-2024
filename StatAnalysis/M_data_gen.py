@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 #list1 = os.listdir()
 #list1.remove("testing.py") #or the filename of the python code
 
+directory = r"/home/quinn/Desktop/Shing-Chi/Magnetar/MagnetarDB/"
+
 def read_data_from_file(filename):
     x_list = []
     y_list = []
@@ -88,7 +90,7 @@ def deltanL15overMax(x_list, y_list, maximum):
 
     return (np.log(nL_15 / maximum))
 
-def deltaL30overL(x_list, y_list, maximum):
+def deltaL30overL15(x_list, y_list, maximum):
     x_point_max = y_list.index(maximum)
     
     if ( x_point_max + 30 > (len(y_list) - 1) ):
@@ -105,12 +107,12 @@ def deltaL30overL(x_list, y_list, maximum):
 
 
 
-filelist = os.listdir()
-filelist.remove("M_data_gen.py")
-filelist.remove("data_reader.py")
+filelist = os.listdir(r"/home/quinn/Desktop/Shing-Chi/Magnetar/MagnetarDB/")
+# filelist.remove("M_data_gen.py")
+# filelist.remove("data_reader.py")
 
 
-file = open("M_data_sheet.data", "w")
+file = open("M_updated_data_sheet.data", "w")
 
 for i in range(len(filelist)):
 
@@ -138,7 +140,7 @@ for i in range(len(filelist)):
         M = filename_elements[5]
 
 
-    x_list, y_list = read_data_from_file(filelist[i])
+    x_list, y_list = read_data_from_file(directory + filelist[i])
 
     #print(y_list)
 
