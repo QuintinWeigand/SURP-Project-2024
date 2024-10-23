@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 #list1 = os.listdir()
 #list1.remove("testing.py") #or the filename of the python code
 
+directory = r"/home/quinn/Desktop/Shing-Chi/Ni-Decay/Ni_DecayDB/"
+
 def read_data_from_file(filename):
     x_list = []
     y_list = []
@@ -79,14 +81,38 @@ def deltaL15(x_list, y_list, maximum):
 #Temporary will use os.listdict() for handeling the filenames and iterate through
 #filename = "LC_0.8_5_1000.0.data"
 
+def deltanL15overMax(x_list, y_list, maximum):
+    x_point_max = y_list.index(maximum)
+    if(x_point_max - 30 < 0):
+        nL_15 = y_list[0]
+    else:
+        nL_15 = y_list[x_point_max - 30]
+
+    return (np.log(nL_15 / maximum))
+
+def deltaL30overL15(x_list, y_list, maximum):
+    x_point_max = y_list.index(maximum)
+    
+    if ( x_point_max + 30 > (len(y_list) - 1) ):
+        L_15 = y_list[-1]
+    else:
+        L_15 = y_list[x_point_max + 30]
+    
+    if (x_point_max + 60) > (len(y_list) - 1):
+        L_30 = y_list[-1]
+    else:
+        L_30 = y_list[x_point_max + 60]
+
+    return (np.log(L_30 / L_15))
 
 
-filelist = os.listdir()
-filelist.remove("0LC_data_gen.py")
-filelist.remove("data_reader.py")
+
+filelist = os.listdir(r"/home/quinn/Desktop/Shing-Chi/Ni-Decay/Ni_DecayDB/")
+# filelist.remove("0LC_data_gen.py")
+# filelist.remove("data_reader.py")
 
 
-file = open("0LC_data_sheet.data", "w")
+file = open(r"/home/quinn/Desktop/Shing-Chi/StatAnalysis/0LC_updated_data_sheet.data", "w")
 
 for i in range(len(filelist)):
 
@@ -108,7 +134,7 @@ for i in range(len(filelist)):
         ejecta_velocity = filename_elements[3]
 
 
-    x_list, y_list = read_data_from_file(filelist[i])
+    x_list, y_list = read_data_from_file(directory + filelist[i])
 
     #print(y_list)
 
@@ -136,7 +162,8 @@ for i in range(len(filelist)):
 
     file.write(str("{:.5e}".format(maximum)) + " " + str("{:.5f}".format(coef_of_variation(standard_deviation, mean))) + " ")
     file.write(str("{:.5f}".format(skew(y_list, mean, standard_deviation))) + " " + str("{:.5f}".format(kurtosis(y_list, mean))) + " ")
-    file.write(str("{:.5e}".format(MAD(y_list, median))) + " " + str("{:.5f}".format(deltaL15(x_list, y_list, maximum))) + "\n")
+    file.write(str("{:.5e}".format(MAD(y_list, median))) + " " + str("{:.5f}".format(deltaL15(x_list, y_list, maximum))) + " ")
+    file.write(str("{:.5e}".format(deltanL15overMax(x_list, y_list, maximum))) + " " + str("{:.5e}".format(deltaL30overL15(x_list, y_list, maximum))) + "\n")
 
 file.close()
 
