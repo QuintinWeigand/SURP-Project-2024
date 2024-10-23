@@ -79,6 +79,30 @@ def deltaL15(x_list, y_list, maximum):
 #Temporary will use os.listdict() for handeling the filenames and iterate through
 #filename = "LC_0.8_5_1000.0.data"
 
+def deltanL15overMax(x_list, y_list, maximum):
+    x_point_max = y_list.index(maximum)
+    if(x_point_max - 30 < 0):
+        nL_15 = y_list[0]
+    else:
+        nL_15 = y_list[x_point_max - 30]
+
+    return (np.log(nL_15 / maximum))
+
+def deltaL30overL(x_list, y_list, maximum):
+    x_point_max = y_list.index(maximum)
+    
+    if ( x_point_max + 30 > (len(y_list) - 1) ):
+        L_15 = y_list[-1]
+    else:
+        L_15 = y_list[x_point_max + 30]
+    
+    if (x_point_max + 60) > (len(y_list) - 1):
+        L_30 = y_list[-1]
+    else:
+        L_30 = y_list[x_point_max + 60]
+
+    return (np.log(L_30 / L_15))
+
 
 
 filelist = os.listdir()
