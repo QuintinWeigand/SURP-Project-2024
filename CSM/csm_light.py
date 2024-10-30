@@ -186,10 +186,15 @@ for e_mass in range(len(ejectaMass)):
 
                         # I am doing the if statements here to check if the model fits within our constrictor
                         # I understand it will just loop and do nothing for a while
-                        # if (massNI[ni_mass] > ejectaMass[e_mass] or massCSM[csm_mass] > ejectaMass[e_mass] or radiusCSM[csm_radius] > r_p[radius_p]):
-                        #     print("Hit Branch")
-                        #     break
-
+                        if (massNI[ni_mass] > ejectaMass[e_mass]):
+                            print("NI Mass", massNI[ni_mass], ") was greater than ejecta mass (" , ejectaMass[e_mass], ")")
+                            break
+                        elif(massCSM[csm_mass] > ejectaMass[e_mass]):
+                            print("MASS_CSM (", massCSM[csm_mass], ") was greater than ejectaMass (" , ejectaMass[e_mass], ")")
+                            break
+                        elif (radiusCSM[csm_radius] > r_p[radius_p]):
+                            print("CSM Radius (" , radiusCSM[csm_radius], ") was greater than radius_p (", r_p[radius_p], ")")
+                            break
                         
                         q = calcualteQ(massCSM[csm_mass], radiusCSM[csm_radius], r_p[radius_p])
                         r_ph = calculateR_ph(q, radiusCSM[csm_radius])
