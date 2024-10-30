@@ -102,12 +102,18 @@ def stepFunction(x):
 
 def function_1(t_prime, t_0, t_i, g_n, q, m_csm_th, v_sn, ejectaMass, t_fs_star, t_rs_star):
 
+    # print("t_rs_star:", t_rs_star, "t_prime:", t_prime)
+    # print(stepFunction(t_rs_star - t_prime))
+    if t_prime < 100:
+        return 0
+
     instance = (
         ( (2 * np.pi) / (N - S)**3 ) * g_n**( (5-S) / (N-S) ) * q**( (N-5) / (N-S) ) * (N-3)**2 * (N-5) * B_F**(5-S) *
         A**( (5-S) / (N-S) ) * (t_prime + t_i)**( (2*N + 6 * S - N*S - 15) / (N-S) ) * stepFunction(t_fs_star - t_prime) + 2 * np.pi * ( (A*g_n) / (q) )**( (5-N) / (N-S) ) *
         B_R**(5-N) * g_n * ( (3-S) / (N-S) )**3 * (t_prime + t_i)**( (2*N + 6 * S - N*S - 15) / (N-S) ) * stepFunction(t_rs_star - t_prime)
-    )    
+    )   
 
+    print(instance)
 
     return instance;
 
@@ -125,7 +131,7 @@ def returnCSMLuminosity(t, ejectaMass, v_sn, massNI, massCSM, r_p, csm_radius, e
 
     t = t * 86400 #Converting t to CSM so we do not have to worry about conversion beyond this point
 
-    x_prime = np.linspace(0, t, 100)
+    x_prime = np.linspace(1, t, 100)
     #We need a list for each integral (2 total lists)
     #List 1
     list_1 = np.array([np.exp(t_prime / t_0) * 
@@ -159,6 +165,8 @@ x_list = np.linspace(1,200,398)
 # massCSM = [0.1,0.3,0.6,1.0,3.0,6.0,10.0]
 # r_p = [10e11, 10e14]
 # radiusCSM = [10**12.5, 10**13, 10**13.5, 10**14, 10**14.5, 10**15, 10**15.5]
+
+# Testing individual indicies
 ejectaMass = [0.5]
 v_sn = [1000.0]
 massNI = [0.1]
