@@ -153,12 +153,18 @@ def returnCSMLuminosity(t, ejectaMass, v_sn, massNI, massCSM, r_p, csm_radius, e
 x_list = np.linspace(1,200,398)
 
 #These need to be converted first
-ejectaMass = [0.5,1.0,3.0,5.0,10.5,20.0]
-v_sn = [1000.0, 3000.0, 5000.0, 7000.0, 9000.0, 10000.0, 13000.0, 15000.0, 17000.0, 19000.0, 20000.0, 23000.0, 25000.0, 27000.0, 29000.0, 30000.0]
-massNI = [0.1,0.3,1.0]
-massCSM = [0.1,0.3,0.6,1.0,3.0,6.0,10.0]
-r_p = [10e11, 10e14]
-radiusCSM = [10**12.5, 10**13, 10**13.5, 10**14, 10**14.5, 10**15, 10**15.5]
+# ejectaMass = [0.5,1.0,3.0,5.0,10.5,20.0]
+# v_sn = [1000.0, 3000.0, 5000.0, 7000.0, 9000.0, 10000.0, 13000.0, 15000.0, 17000.0, 19000.0, 20000.0, 23000.0, 25000.0, 27000.0, 29000.0, 30000.0]
+# massNI = [0.1,0.3,1.0]
+# massCSM = [0.1,0.3,0.6,1.0,3.0,6.0,10.0]
+# r_p = [10e11, 10e14]
+# radiusCSM = [10**12.5, 10**13, 10**13.5, 10**14, 10**14.5, 10**15, 10**15.5]
+ejectaMass = [0.5]
+v_sn = [1000.0]
+massNI = [0.1]
+massCSM = [0.1]
+r_p = [10e11]
+radiusCSM = [10**15.5]
 
 totalFiles = len(ejectaMass) * len(v_sn) * len(massNI) * len(massCSM) * len(r_p) * len(radiusCSM) 
 
@@ -197,6 +203,8 @@ for e_mass in range(len(ejectaMass)):
                         elif (radiusCSM[csm_radius] < r_p[radius_p]):
                             print("CSM Radius (" , radiusCSM[csm_radius], ") was less than radius_p (", r_p[radius_p], ")")
                             break
+
+                        print(e_mass, vel_sn, ni_mass, csm_mass, radius_p, csm_radius)
 
                         print("Current parameters")
                         print("Ejecta Mass:", ejectaMass[e_mass] / 1.989e33, "VSN:", v_sn[vel_sn] / 100000, "MASSNI:", massNI[ni_mass] / 1.989e33, "CSM_MASS:", massCSM[csm_mass] / 1.989e33, "R_P:", r_p[radius_p], "CSM_RADIUS:", radiusCSM[csm_radius])
