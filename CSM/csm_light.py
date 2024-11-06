@@ -53,7 +53,7 @@ def calcualteQ(m_csm, r_csm, radius_p):
     return q
 
 def calculateR_ph(q, r_csm):
-    r_ph = ((((2/3) * ((1-S) / (K * q))) + r_csm**(1-S)))**((1) / (1-S))
+    r_ph = ((-((2/3) * ((1-S) / (K * q))) + r_csm**(1-S)))**((1) / (1-S))
     return r_ph
 
 def calculateM_CSM_TH(q, r_ph, r_p):
@@ -100,7 +100,7 @@ def stepFunction(x):
         returnValue = 1
     return returnValue
 
-def function_1(t_prime, t_0, t_i, g_n, q, m_csm_th, v_sn, ejectaMass, t_fs_star, t_rs_star):
+def function_1(t_prime, t_0, t_i, g_n, q, m_csm_th, v_sn, ejectaMass, t_fs_star, t_rs_star, t_initial):
 
     # print("t_rs_star:", t_rs_star, "t_prime:", t_prime)
     # print(stepFunction(t_rs_star - t_prime))
@@ -109,11 +109,11 @@ def function_1(t_prime, t_0, t_i, g_n, q, m_csm_th, v_sn, ejectaMass, t_fs_star,
 
     instance = (
         ( (2 * np.pi) / (N - S)**3 ) * g_n**( (5-S) / (N-S) ) * q**( (N-5) / (N-S) ) * (N-3)**2 * (N-5) * B_F**(5-S) *
-        A**( (5-S) / (N-S) ) * (t_prime + t_i)**( (2*N + 6 * S - N*S - 15) / (N-S) ) * stepFunction(t_fs_star - t_prime) + 2 * np.pi * ( (A*g_n) / (q) )**( (5-N) / (N-S) ) *
-        B_R**(5-N) * g_n * ( (3-S) / (N-S) )**3 * (t_prime + t_i)**( (2*N + 6 * S - N*S - 15) / (N-S) ) * stepFunction(t_rs_star - t_prime)
+        A**( (5-S) / (N-S) ) * (t_prime + t_initial)**( (2*N + 6 * S - N*S - 15) / (N-S) ) * stepFunction(t_fs_star - t_prime) + 2 * np.pi * ( (A*g_n) / (q) )**( (5-N) / (N-S) ) *
+        B_R**(5-N) * g_n * ( (3-S) / (N-S) )**3 * (t_prime + t_initial)**( (2*N + 6 * S - N*S - 15) / (N-S) ) * stepFunction(t_rs_star - t_prime)
     )   
 
-    print(instance)
+    # print(instance)
 
     return instance;
 
@@ -127,7 +127,7 @@ def function_2(t_prime, ejectaMass, r_ph, massNI, m_csm_th, t_0_prime):
 
     return instance
 
-def returnCSMLuminosity(t, ejectaMass, v_sn, massNI, massCSM, r_p, csm_radius, esn, g_n, q, r_ph, m_csm_th, t_0, t_0_prime, t_fs_star, t_rs_star):
+def returnCSMLuminosity(t, ejectaMass, v_sn, massNI, massCSM, r_p, csm_radius, esn, g_n, q, r_ph, m_csm_th, t_0, t_0_prime, t_fs_star, t_rs_star, t_initial):
 
     t = t * 86400 #Converting t to CSM so we do not have to worry about conversion beyond this point
 
@@ -136,7 +136,7 @@ def returnCSMLuminosity(t, ejectaMass, v_sn, massNI, massCSM, r_p, csm_radius, e
     #List 1
     list_1 = np.array([np.exp(t_prime / t_0) * 
                        function_1(t_prime, t_0, t_0_prime, g_n, q, 
-                                  m_csm_th, v_sn, ejectaMass, t_fs_star, t_rs_star) 
+                                  m_csm_th, v_sn, ejectaMass, t_fs_star, t_rs_star, t_initial) 
                                   for t_prime in x_prime])
     list_2 = np.array([np.exp(t_prime / t_0_prime) * 
                        function_2(t_prime, ejectaMass, r_ph, 
@@ -159,22 +159,25 @@ def returnCSMLuminosity(t, ejectaMass, v_sn, massNI, massCSM, r_p, csm_radius, e
 x_list = np.linspace(1,200,398)
 
 #These need to be converted first
-# ejectaMass = [0.5,1.0,3.0,5.0,10.5,20.0]
-# v_sn = [1000.0, 3000.0, 5000.0, 7000.0, 9000.0, 10000.0, 13000.0, 15000.0, 17000.0, 19000.0, 20000.0, 23000.0, 25000.0, 27000.0, 29000.0, 30000.0]
-# massNI = [0.1,0.3,1.0]
-# massCSM = [0.1,0.3,0.6,1.0,3.0,6.0,10.0]
-# r_p = [10e11, 10e14]
-# radiusCSM = [10**12.5, 10**13, 10**13.5, 10**14, 10**14.5, 10**15, 10**15.5]
+ejectaMass = [0.5,1.0,3.0,5.0,10.5,20.0]
+v_sn = [1000.0, 3000.0, 10000.0, 13000.0, 15000.0, 17000.0, 19000.0, 20000.0, 25000.0, 30000.0]
+massNI = [0.1,0.3,1.0]
+massCSM = [0.1,0.3,0.6,1.0,3.0,6.0,10.0]
+r_p = [10e11, 10e14]
+radiusCSM = [10**12.5, 10**13, 10**13.5, 10**14, 10**14.5, 10**15, 10**15.5]
 
 # Testing individual indicies
-ejectaMass = [0.5]
-v_sn = [1000.0]
-massNI = [0.1]
-massCSM = [0.1]
-r_p = [10e11]
-radiusCSM = [10**15.5]
+# ejectaMass = [0.5]
+# v_sn = [1000.0]
+# massNI = [0.1]
+# massCSM = [0.1]
+# r_p = [10e11]
+# radiusCSM = [10**15.5]
 
 totalFiles = len(ejectaMass) * len(v_sn) * len(massNI) * len(massCSM) * len(r_p) * len(radiusCSM) 
+
+print(totalFiles)
+exit()
 
 # Conversions
 for i in range(len(ejectaMass)):
@@ -228,7 +231,7 @@ for e_mass in range(len(ejectaMass)):
 
                         y_list = np.array([returnCSMLuminosity(t, ejectaMass[e_mass], v_sn[vel_sn], massNI[ni_mass], 
                                                                massCSM[csm_mass], r_p[radius_p], radiusCSM[csm_radius], 
-                                                               esn, g_n, q, r_ph, m_csm_th, t_0, t_0_prime, t_fs_star, t_rs_star) for t in x_list])
+                                                               esn, g_n, q, r_ph, m_csm_th, t_0, t_0_prime, t_fs_star, t_rs_star, t_initial) for t in x_list])
                         
                         # We know x_list and y_list should be of the same length
 
