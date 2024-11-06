@@ -159,8 +159,8 @@ def returnCSMLuminosity(t, ejectaMass, v_sn, massNI, massCSM, r_p, csm_radius, e
 x_list = np.linspace(1,200,398)
 
 #These need to be converted first
-ejectaMass = [0.5,1.0,3.0,5.0,10.5,20.0]
-v_sn = [1000.0, 3000.0, 10000.0, 13000.0, 15000.0, 17000.0, 19000.0, 20000.0, 25000.0, 30000.0]
+ejectaMass = [0.5,1.0,3.0,5.0,10.0,20.0]
+v_sn = [1000.0, 3000.0, 5000.0, 10000.0, 15000.0, 20000.0, 25000.0, 30000.0]
 massNI = [0.1,0.3,1.0]
 massCSM = [0.1,0.3,0.6,1.0,3.0,6.0,10.0]
 r_p = [10e11, 10e14]
@@ -176,7 +176,7 @@ radiusCSM = [10**12.5, 10**13, 10**13.5, 10**14, 10**14.5, 10**15, 10**15.5]
 
 totalFiles = len(ejectaMass) * len(v_sn) * len(massNI) * len(massCSM) * len(r_p) * len(radiusCSM) 
 
-print(totalFiles)
+print("total files: " + str(totalFiles))
 exit()
 
 # Conversions
@@ -205,20 +205,24 @@ for e_mass in range(len(ejectaMass)):
                     for csm_radius in range(len(radiusCSM)):
                         # I am doing the if statements here to check if the model fits within our constrictor
                         # I understand it will just loop and do nothing for a while
+                        
                         if (massNI[ni_mass] > ejectaMass[e_mass]):
                             print("NI Mass", massNI[ni_mass], ") was greater than ejecta mass (" , ejectaMass[e_mass], ")")
+                            counter += 1
                             break
                         elif(massCSM[csm_mass] > ejectaMass[e_mass]):
                             print("MASS_CSM (", massCSM[csm_mass], ") was greater than ejectaMass (" , ejectaMass[e_mass], ")")
+                            counter += 1
                             break
                         elif (radiusCSM[csm_radius] < r_p[radius_p]):
                             print("CSM Radius (" , radiusCSM[csm_radius], ") was less than radius_p (", r_p[radius_p], ")")
+                            counter += 1
                             break
 
                         print(e_mass, vel_sn, ni_mass, csm_mass, radius_p, csm_radius)
 
                         print("Current parameters")
-                        print("Ejecta Mass:", ejectaMass[e_mass] / 1.989e33, "VSN:", v_sn[vel_sn] / 100000, "MASSNI:", massNI[ni_mass] / 1.989e33, "CSM_MASS:", massCSM[csm_mass] / 1.989e33, "R_P:", r_p[radius_p], "CSM_RADIUS:", radiusCSM[csm_radius])
+                        print("Ejecta Mass:", "{:.2f}".format(ejectaMass[e_mass] / 1.989e33), "VSN:", "{:.1f}".format(v_sn[vel_sn] / 100000), "MASSNI:", "{:.2f}".format(massNI[ni_mass]/ 1.989e33), "CSM_MASS:", "{:.2f}".format(massCSM[csm_mass] / 1.989e33), "R_P:", "{:.2e}".format(r_p[radius_p]), "CSM_RADIUS:", "{:.2e}".format(radiusCSM[csm_radius]))
                         
                         q = calcualteQ(massCSM[csm_mass], radiusCSM[csm_radius], r_p[radius_p])
                         r_ph = calculateR_ph(q, radiusCSM[csm_radius])
@@ -237,7 +241,7 @@ for e_mass in range(len(ejectaMass)):
 
                         filename = "CSM_LC_" + str("{:.2f}".format(ejectaMass[e_mass] / 1.989e33)) + "_" + str("{:.1f}".format(v_sn[vel_sn] / 100000)) + "_" + str("{:.2f}".format(massNI[ni_mass] / 1.989e33)) + "_" + str("{:.2f}".format(massCSM[csm_mass] / 1.989e33)) + "_" + str("{:.2e}".format(r_p[radius_p])) + "_" + str("{:.2e}".format(radiusCSM[csm_radius])) + ".data"
 
-                        print("Filename",filename)
+                        # print("Filename",filename)
 
                         finalLocation = directory + filename
 
@@ -250,8 +254,10 @@ for e_mass in range(len(ejectaMass)):
                         file.close() # File is closed
 
                         print("Files (" + str(counter) + "/" + str(totalFiles) + ")" + " [" + str("{:.2f}".format(float(counter / totalFiles) * 100)) + "%]")
-
+                        
                         counter += 1
+
+                        
 
 
 
