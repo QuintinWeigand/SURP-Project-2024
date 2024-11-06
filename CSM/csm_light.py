@@ -177,7 +177,7 @@ radiusCSM = [10**12.5, 10**13, 10**13.5, 10**14, 10**14.5, 10**15, 10**15.5]
 totalFiles = len(ejectaMass) * len(v_sn) * len(massNI) * len(massCSM) * len(r_p) * len(radiusCSM) 
 
 print("total files: " + str(totalFiles))
-exit()
+
 
 # Conversions
 for i in range(len(ejectaMass)):
